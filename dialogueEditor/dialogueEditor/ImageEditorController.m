@@ -72,7 +72,7 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
 
 - (BOOL) isValid
 {
-    return (_endTime > _startTime) && _imagePath && _content ;
+    return (_endTime >= _startTime) && _imagePath ;//&& _content ;
 }
 
 - (NSString *) imageName
@@ -84,9 +84,13 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
 
 - (NSDictionary *) sceneInfo
 {
-    NSDictionary *info = @{@"image": [self imageName],
-                           @"time":NSStringFromPoint((CGPoint){_startTime,_endTime}),
-                           @"content":self.content};
+    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+    [info addEntriesFromDictionary:@{@"image": [self imageName],
+                                     @"time":NSStringFromPoint((CGPoint){_startTime,_endTime}),}];
+    if (self.content)
+    {
+        [info setValue:self.content forKey:@"content"];
+    }
     return info;
 }
 
