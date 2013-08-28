@@ -89,6 +89,7 @@
         [fileManager copyItemAtPath:[videoURL path] toPath:dstPath error:nil];
         
         NSMutableDictionary *root = [NSMutableDictionary dictionary];
+        [root setValue:dialogueName forKey:@"title"];
         [root setValue:[NSNumber numberWithInt:DIALOG_TYPE_VIDEO] forKey:@"type"];
         [root setValue:name forKey:@"video"];
         

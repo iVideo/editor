@@ -263,6 +263,7 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
                                                            error:nil];
     
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
+    [info setValue:[NSNumber numberWithInt:DIALOG_TYPE_IMAGE] forKey:@"type"];
     [info setValue:_dialogTitle forKey:@"title"];
     [info setValue:[_audioFilePath lastPathComponent] forKey:@"audioFile"];
     NSLog(@"copy %@ to %@",_audioFilePath,_workPath);
@@ -304,9 +305,19 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
 
     NSMutableArray *sceneInfo = [NSMutableArray array];
     NSString *_temp= nil;
+    
+    NSMutableSet *_processedImages = [NSMutableSet set];
     for (ImageScene *scene in self.scenes)
     {
-        _temp = scene.imagePath; // for bakup
+        _temp = scene.imagePath; // for backup
+        
+        if ([_processedImages containsObject:scene.imagePath])
+        {
+            continue;
+        }
+        else [_processedImages addObject:scene.imagePath];
+        
+        NSLog(@"image count:%ld",(unsigned long)[_processedImages count]);
         if (_allow_pvr_ccz.state == NSOnState && isTPExit)
         {
             NSString *_newImageName;
@@ -336,7 +347,7 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
 //            [task setArguments:arg];
 //            [task launch];
 //            [task waitUntilExit];
-            NSLog(@"%@",[arg description]);
+//            NSLog(@"%@",[arg description]);
 //            [NSTask launchedTaskWithLaunchPath:TPPath arguments:arg];
             NSTask *_task= [[NSTask alloc] init];
             [_task setLaunchPath:TPPath];
