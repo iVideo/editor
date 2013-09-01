@@ -14,6 +14,7 @@
 
 @property (nonatomic,copy) NSString *imagePath;
 @property (nonatomic,copy) NSString *content;
+@property (nonatomic,copy) NSString *timeLine;
 
 @property (nonatomic,assign) CGFloat startTime;
 @property (nonatomic,assign) CGFloat endTime;
@@ -45,7 +46,6 @@
 
 @property (atomic,retain) NSMutableArray *scenes;
 @property (weak) IBOutlet NSToolbarItem *loadAudioButton;
-@property (weak) IBOutlet NSToolbarItem *pickTimeButton;
 @property (weak) IBOutlet NSToolbarItem *publishSettingButton;
 @property (weak) IBOutlet NSToolbarItem *publishButton;
 
@@ -53,7 +53,9 @@
 
 - (IBAction)loadAudio:(id)sender;
 
-- (IBAction)pickTime:(id)sender;
+- (IBAction)pickStartTime:(NSToolbarItem *)sender;
+- (IBAction)pickEndTime:(NSToolbarItem *)sender;
+- (IBAction)pickTimeLine:(NSToolbarItem *)sender;
 
 - (IBAction)publishSetting:(id)sender;
 
@@ -69,6 +71,7 @@
 @property (weak) IBOutlet NSTextField *startTimeLabel;
 
 @property (weak) IBOutlet NSTextField *endTimeLabel;
+@property (weak) IBOutlet NSTextField *timeLineLabel;
 
 @property (weak) IBOutlet NSTableView *sceneTable;
 

@@ -60,13 +60,8 @@
         {
             NSURL *url = savePanel.URL;
             dialogueName = [savePanel.nameFieldStringValue copy];
-            NSDictionary *attri;
-            attri = @{@"directoryName": dialogueName};
-            [[NSFileManager defaultManager] createDirectoryAtURL:url
-                                     withIntermediateDirectories:YES
-                                                      attributes:attri
-                                                           error:nil];
-            saveURL = [NSURL URLWithString:dialogueName relativeToURL:url];
+            
+            saveURL = url;
             self.window.title = dialogueName;
         }
         else if (result == NSFileHandlingPanelCancelButton)
@@ -83,6 +78,20 @@
         // show progress
         [self.progressBar startAnimation:self];
         [self.progressBar setHidden:NO];
+        
+        NSString *_workPath = [saveURL path];
+        BOOL isDir;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:_workPath isDirectory:&isDir] && isDir)
+        {
+            [[NSFileManager defaultManager] removeItemAtPath:_workPath error:nil];
+        }
+
+        NSDictionary *attri;
+        attri = @{@"directoryName": dialogueName};
+        [[NSFileManager defaultManager] createDirectoryAtURL:saveURL
+                                 withIntermediateDirectories:YES
+                                                  attributes:attri
+                                                       error:nil];
         
         NSString *name = [NSString stringWithFormat:@"%s.%@",videoFilePrefix,[videoURL pathExtension]];
         NSString *dstPath = [[saveURL path] stringByAppendingPathComponent:name];

@@ -91,6 +91,25 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
     {
         [info setValue:self.content forKey:@"content"];
     }
+    
+    if (self.timeLine.length > 0)
+    {
+        [info setValue:[NSNumber numberWithBool:YES] forKey:@"synchronize"];
+        NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@" ,-{}<>|/"];
+        NSArray *times = [self.timeLine componentsSeparatedByCharactersInSet:set];
+        NSUInteger count = [times count] / 2;
+        
+        NSMutableArray *array = [NSMutableArray arrayWithCapacity:count];
+        for (int i=0;i < count;i++)
+        {
+            NSString *start = [times objectAtIndex:2*i];
+            NSString *end   = [times objectAtIndex:2*i+1];
+            NSString *period = [NSString stringWithFormat:@"{%@,%@}",start,end];
+            [array addObject:period];
+        }
+        [info setValue:array forKey:@"wordPeriods"];
+    }
+    
     return info;
 }
 
@@ -204,21 +223,41 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
 	}];
 }
 
-- (IBAction)pickTime:(id)sender {
+- (IBAction)pickStartTime:(NSToolbarItem *)sender {
     NSString *time = [NSString stringWithFormat:@"%.2f",CMTimeGetSeconds(self.wfx.player.currentTime)];
-    NSLog(@"pick time:%@",time);
     
-    NSPasteboard *pasteBoard = [NSPasteboard generalPasteboard];
-    [pasteBoard clearContents];
+    [_startTimeLabel setStringValue:time];
     
-    BOOL success = [pasteBoard writeObjects:@[time]];
+    if (_selectedIndexOfScene < 0 || _selectedIndexOfScene >= [self.scenes count])
+        return;
     
-    if (!success)
-    {
-        NSAlert *alart;
-        alart = [NSAlert alertWithMessageText:@"Error" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"failed to copy current time"];
-        [alart runModal];
-    }
+    ImageScene *scene = [self.scenes objectAtIndex:_selectedIndexOfScene];
+    scene.startTime = [_startTimeLabel floatValue];
+}
+
+- (IBAction)pickEndTime:(NSToolbarItem *)sender {
+    NSString *time = [NSString stringWithFormat:@"%.2f",CMTimeGetSeconds(self.wfx.player.currentTime)];
+    
+    [_endTimeLabel setStringValue:time];
+    
+    if (_selectedIndexOfScene < 0 || _selectedIndexOfScene >= [self.scenes count])
+        return;
+    
+    ImageScene *scene = [self.scenes objectAtIndex:_selectedIndexOfScene];
+    scene.endTime = [_endTimeLabel floatValue];
+}
+
+- (IBAction)pickTimeLine:(NSToolbarItem *)sender {
+    NSString *time = [NSString stringWithFormat:@"%.2f",CMTimeGetSeconds(self.wfx.player.currentTime)];
+    
+    NSString *timeLine = [_timeLineLabel stringValue];
+    [_timeLineLabel setStringValue:[timeLine stringByAppendingPathComponent:time]];
+    
+    if (_selectedIndexOfScene < 0 || _selectedIndexOfScene >= [self.scenes count])
+        return;
+    
+    ImageScene *scene = [self.scenes objectAtIndex:_selectedIndexOfScene];
+    scene.timeLine = [_timeLineLabel stringValue];
 }
 
 - (IBAction)publishSetting:(id)sender {
@@ -254,6 +293,13 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
     [self.indicator startAnimation:self];
     [self.indicator setHidden:NO];
     NSLog(@"work path:%@",_workPath);
+    
+    BOOL isDir;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:_workPath isDirectory:&isDir] && isDir)
+    {
+        [[NSFileManager defaultManager] removeItemAtPath:_workPath error:nil];
+    }
+    
     NSDictionary *attri;
     attri = @{@"directoryName": _dialogTitle};
     NSURL *url = [NSURL fileURLWithPath:_workPath isDirectory:YES];
@@ -528,8 +574,9 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
     [self.startTimeLabel setStringValue:[NSString stringWithFormat:@"%f",scene.startTime]];
     [self.endTimeLabel setStringValue:[NSString stringWithFormat:@"%f",scene.endTime]];
     
-    [self.dialogContent setStringValue:scene.content?scene.content:@"null"];
+    [self.dialogContent setStringValue:scene.content?scene.content:@""];
     
+    [self.timeLineLabel setStringValue:scene.timeLine?scene.timeLine:@""];
     // thumbnail image
     if (scene.imagePath)
     {
@@ -575,6 +622,7 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
 {
     if (_selectedIndexOfScene < 0 || _selectedIndexOfScene >= [self.scenes count])
         return;
+    
     ImageScene *scene = [self.scenes objectAtIndex:_selectedIndexOfScene];
     NSTextField *textField = [obj object];
     
