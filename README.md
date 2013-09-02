@@ -31,8 +31,8 @@ Dialogue Editor 用于生成 dialogue framework 所需的资源配置文件。
 
 #### Functions
 
-* start time button:设置 start time 为当前音频播放时间。start time 为`scene`在音频中的开始时间。
-* end time button  :设置 end time 为当前音频播放时间。end time 为`scene`在音频中的结束时间。
+* start time button:设置当前音频播放时间为 start time。start time 为`scene`在音频中的开始时间。
+* end time button  :设置当前音频播放时间为 end time。end time 为`scene`在音频中的结束时间。
 * timeline button  :添加当前音频播放时间到 timeline。
 * publish setting  :如果 pvr.ccz 不选的话就会默认转成 png 格式图片，如果 TexturePacker 没装的话也会转成 png 格式。
 
