@@ -6,7 +6,7 @@ Dialogue Editor 用于生成 dialogue framework 所需的资源配置文件。
 ### video
 
 ---
-![](https://github.com/yiplee/editor/blob/master/screenshots/video%20editor.png)
+![](https://raw.github.com/yiplee/editor/master/screenshots/video%20editor.png)
 
 窗口弹出时先选择要保存的位置，输入project name.
 
@@ -18,7 +18,7 @@ Dialogue Editor 用于生成 dialogue framework 所需的资源配置文件。
 ### image
 
 ---
-![](https://github.com/yiplee/editor/blob/master/screenshots/image%20editor.png)
+![](https://raw.github.com/yiplee/editor/master/screenshots/image%20editor.png)
 
 窗口弹出时先选择要保存的位置，输入project name.图片类型的对话相当于一本书，每页是一个`scene`,包括一副图片和一段话，还有时间信息等。音频波形图可以点击来直接从指定时间播放。
 
@@ -45,7 +45,7 @@ Dialogue Editor 用于生成 dialogue framework 所需的资源配置文件。
 
 #### Audacity
 
-![](https://github.com/yiplee/editor/blob/master/screenshots/audacity.png)
+![](https://raw.github.com/yiplee/editor/master/screenshots/audacity.png)
 
 先标记出`scene`中所有单词（如上图所示），然后导出标记到文件，例如 label track.txt .然后用以下shell脚本处理一下。
 
