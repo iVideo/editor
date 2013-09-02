@@ -177,6 +177,7 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
     self.startTimeLabel.delegate = self;
     self.endTimeLabel.delegate = self;
     self.dialogContent.delegate = self;
+    self.timeLineLabel.delegate = self;
 
     NSSavePanel *savePanel = [NSSavePanel savePanel];
     [savePanel setCanCreateDirectories:YES];
@@ -637,6 +638,10 @@ static void saveNSImageAsPNGToPath(NSImage *image,NSString *path)
     else if (textField == self.dialogContent)
     {
         scene.content = [textField stringValue];
+    }
+    else if (textField == self.timeLineLabel)
+    {
+        scene.timeLine = [textField stringValue];
     }
     
     NSIndexSet *index = [NSIndexSet indexSetWithIndex:_selectedIndexOfScene];
